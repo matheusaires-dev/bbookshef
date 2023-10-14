@@ -201,5 +201,7 @@
       "genre": "Aventura"
     }
   ],
-  "users": []
+  "users": [],
+  "favorites": [],
+  "keepReading": []
 }

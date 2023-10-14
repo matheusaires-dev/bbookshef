@@ -1,0 +1,1 @@
+interface IBookServices extends IServices<IBookServices>{}
