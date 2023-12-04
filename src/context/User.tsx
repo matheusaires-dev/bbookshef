@@ -2,11 +2,12 @@ import { SetStateAction, createContext, useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 import UserServices from "../services/UserServices";
+import BookService from "../services/libary";
 
 interface IUserContext {
   user: IUser | null;
   setUser: React.Dispatch<React.SetStateAction<IUser | null>>;
-  signup(name: string, login: IUserLogin): Promise<{ success: boolean; message: string; }>;
+  signup(name: string, email: string, password: string): Promise<{ success: boolean; message: string; }>;
 }
 
 export const UserContext = createContext<IUserContext | undefined>(undefined);
@@ -18,39 +19,36 @@ const User = ({ children }: { children: React.ReactNode }) => {
   });
 
   useEffect(() => {
-    if (user) {
-      UserServices.update(user.id, user);
+    if (user && user._id) {
+      UserServices.update(user._id, user);
       localStorage.setItem("user", JSON.stringify(user));
     } else {
       localStorage.removeItem("user");
     }
   }, [user]);
 
-  const signup = async (name: string, login: IUserLogin) => {
+  const signup = async (name: string, email: string, password: string) => {
     try {
-      const id = uuidv4();
 
-      const newUser: IUser = {
-        id,
+      const newUser = {
         name,
-        login,
-        createdAt: new Date(),
-        updateAt: new Date()
+        email,
+        password
       };
 
-      const user = await UserServices.getByEmail(login.email);
+      const response = await UserServices.create(newUser);
 
-      if (user) {
-        throw Error("A user with this email already exists.");
-      } else {
-        await UserServices.create(newUser);
+      if (response.success) {
+        return {
+          success: true,
+          message:
+            "User registered successfully! Log in using the provided email and password.",
+        };
       }
 
-      return {
-        success: true,
-        message:
-          "User registered successfully! Log in using the provided email and password.",
-      };
+      throw Error(response.message);
+
+
     } catch (error) {
       if (error instanceof Error) {
         return {

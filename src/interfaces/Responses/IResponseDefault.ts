@@ -1,4 +1,5 @@
 interface IResponseDefault {
     success: boolean,
-    message: string,
+    message?: string,
+    data?: any
 }

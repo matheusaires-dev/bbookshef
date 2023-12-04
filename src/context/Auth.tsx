@@ -17,9 +17,10 @@ export const Auth = ({ children }: { children: React.ReactNode }) => {
     try {
       const user = await UserServices.auth(login);
 
-      if (!user) throw Error("A user with this email already exists.")
+      if (!user.success) throw Error("login error.")
       
-      setUser(user);
+      setUser(user.data as IUser);
+
       return {
         success: true,
         message: "login successful",

@@ -1,7 +1,8 @@
 interface IUser {
-  id: string;
+  _id?: string;
   name: string;
-  login: IUserLogin;
-  createdAt: Date;
-  updateAt: Date;
+  email: string;
+  password: string;
+  favorites?: Array<string>;
+  reading?: { bookId: string, pag: number }[];
 }
