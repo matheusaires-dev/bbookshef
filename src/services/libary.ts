@@ -1,10 +1,13 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3001';
+const API_URL = 'http://localhost:3000';
 
 const BookService = {
-    getBooks: async () => {
-        const response = await axios.get(`${API_URL}/books`);
+    getBooks: async (ids?: string[]) => {
+        const params = (ids && ids.length > 0 )? { ids: ids.join(',') } : {};
+        console.log("ids", ids)
+        console.log("params", params)
+        const response = await axios.get(`${API_URL}/books`, { params });
         return response.data;
     },
 

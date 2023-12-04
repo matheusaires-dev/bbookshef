@@ -19,10 +19,13 @@ import {
   Typography,
 } from "@mui/material";
 import { Cancel } from "@mui/icons-material";
-import { AuthContext } from "../../context/Auth";
+import { useUser } from "../../hooks/userUser";
+import { useAuth } from "../../hooks/useAuth";
 
 const Access = () => {
-  const { signup, signin } = useContext(AuthContext);
+  const { signin } = useAuth();
+  const { signup } = useUser();
+
   const delay = 1000;
 
   const [name, setName] = useState("");
@@ -81,8 +84,8 @@ const Access = () => {
     setOpenLoading(true);
     setInProgress(true);
 
-    setTimeout(() => {
-      const registration = signup(name, { email, password });
+    setTimeout(async () => {
+      const registration = await signup(name, email, password);
 
       setIsLogin(true);
       handleRegistered(registration.success, registration.message);
@@ -95,9 +98,8 @@ const Access = () => {
     setOpenLoading(true);
     setOpenModal(false);
 
-    setTimeout(() => {
-      if (signin({ email, password })) {
-        // Handle successful login
+    setTimeout(async() => {
+      if (await signin({ email, password })) {
       } else {
         setOpenModal(true);
         handleLoginError();

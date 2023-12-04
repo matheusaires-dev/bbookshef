@@ -1,5 +1,5 @@
 interface IDataBook {
-  id: string;
+  _id: string;
   image: string;
   urlImage: string;
   name: string;

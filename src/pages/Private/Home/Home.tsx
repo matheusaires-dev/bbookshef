@@ -6,7 +6,7 @@ import Favorites from "./components/Favorites/Favorites";
 const Home = () => {
   return (
     <Box className="home" color="secondary.main">
-      <KeepReading />
+      {/* <KeepReading /> */}
       <Favorites />
       <Suggested />
     </Box>

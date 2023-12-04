@@ -1,4 +1,5 @@
 import { createContext, useEffect, useState } from "react";
+import BookService from "../services/libary";
 
 export const LibaryContext = createContext<{
   collection: IDataBook[]; // Altere "any[]" para o tipo correto de sua coleção de dados
@@ -48,25 +49,13 @@ const Libary = ({ children }: { children: React.ReactNode }) => {
   }, [bookSelected]);
 
   useEffect(() => {
-    fetch("http://localhost:3001/books")
-      .then((res) => {
-        // console.log(res)
-        if (!res.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return res.json();
-      })
-      .then((data) => {
-        setBooks(data);
-      })
-      .catch((err) => {
-        console.error('Error fetching data:', err);
-      })
+    const setupBooks = async () => {
+      const res = await BookService.getBooks();
+      setBooks(res);
+    }
 
+    setupBooks();
   }, [])
-  
-  // console.log(books)
-  console.log("searched",searched)
 
 
   return (

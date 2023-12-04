@@ -16,9 +16,9 @@ const Book = ({ data }: { data: IDataBook }) => {
   const { setBookSelected } = useLibary();
   const { user, setUser } = useUser();
 
-  const favorites = new Set(user?.favorites.bookIds);
+  const favorites = new Set(user?.favorites);
 
-  const isFavorite = favorites.has(Number(data.id));
+  const isFavorite = favorites.has(data._id);
 
   const handleCardClick = () => {
     setBookSelected(data);
@@ -28,29 +28,27 @@ const Book = ({ data }: { data: IDataBook }) => {
   const handleFavoriteClick = (event: React.MouseEvent) => {
     event.stopPropagation();
 
-    if (isFavorite) {
-      const othesFavoriteIds = user?.favorites.bookIds.filter(
-        (id) => id !== Number(data.id)
-      );
+    if (user?.favorites) {
+      if (isFavorite) {
+        const othesFavoriteIds = user?.favorites.filter(
+          (id) => id !== data._id
+        );
 
-      const othesFavoriteBooks = user?.favorites.books.filter(
-        (book) => book.id !== data.id
-      );
+        setUser({
+          ...(user as IUser),
+          favorites: [...(othesFavoriteIds as string[])],
+        });
+      } else {
+        setUser({
+          ...(user as IUser),
+          favorites: [...(user?.favorites as string[]), data._id],
+        });
+      }
 
-      setUser({
-        ...(user as IUser),
-        favorites: {
-          books: [...(othesFavoriteBooks as IDataBook[])],
-          bookIds: [...(othesFavoriteIds as number[])],
-        },
-      });
     } else {
       setUser({
         ...(user as IUser),
-        favorites: {
-          books: [...(user?.favorites.books as IDataBook[]), data],
-          bookIds: [...(user?.favorites.bookIds as number[]), Number(data.id)],
-        },
+        favorites: [data._id],
       });
     }
   };

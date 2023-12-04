@@ -5,6 +5,7 @@ const Suggested = () => {
   const { collection, searched } = useLibary();
 
   const suggested = searched ? searched : collection;
+  console.log(suggested)
 
   return (
     <BookList list={suggested} title="Suggested"/>
